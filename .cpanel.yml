@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - /bin/cp -R com/. /home/ibrook/public_html/
+    - /bin/cp -R ir/. /home/ibrook/ir.ibrooker.com/
