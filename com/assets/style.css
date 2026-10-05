@@ -119,6 +119,12 @@ html[lang="fa"] .steps li::before{content:counter(s,persian)}
 .rules span{color:var(--muted);font-size:15.5px}
 
 .sectors{display:flex;flex-wrap:wrap;gap:12px;margin:0;padding:0;list-style:none}
+.sector-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0 60px;border-top:1px solid var(--line)}
+@media (max-width:760px){.sector-grid{grid-template-columns:1fr}}
+.sector{padding:28px 0 30px;border-bottom:1px solid var(--line)}
+.sector h3{font-size:20px;margin:0 0 8px;font-weight:700}
+.sector .terms{margin:0 0 10px;color:var(--gold-2);font-size:14.5px;line-height:1.6}
+.sector p{margin:0;color:#C3CBE0;font-size:15.5px}
 .sectors li{border:1px solid var(--line);padding:10px 18px;border-radius:999px;font-size:15.5px;background:rgba(255,255,255,.03)}
 
 .founder{display:grid;grid-template-columns:1fr 1.3fr;gap:60px}
