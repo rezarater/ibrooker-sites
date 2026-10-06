@@ -20,6 +20,7 @@
   var A = 2, B = 11; // the two hubs that get connected
 
   var W, H, DPR, nodes = [], parts = [], N, p = 0, target = 0, t0 = performance.now();
+  var visible = true, running = false; // animate only while the story is on screen and the tab is visible
 
   function rnd(a, b) { return a + Math.random() * (b - a); }
   function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
@@ -154,23 +155,36 @@
       }
     }
 
-    // captions
+    // captions (styles are written only when the value changes, to avoid needless style recalculation)
     caps.forEach(function (el) {
       var a0 = +el.dataset.from, a1 = +el.dataset.to, fade = 0.035;
       var o = Math.min(a0 <= 0 ? 1 : clamp((p - a0) / fade), clamp((a1 - p) / fade));
       if (a1 >= 1) o = clamp((p - a0) / fade);
+      o = Math.round(o * 1000) / 1000;
+      if (el._o === o) return;
+      el._o = o;
       el.style.opacity = o;
       el.style.transform = 'translateY(' + ((1 - o) * 14) + 'px)';
       el.style.visibility = o > 0.01 ? 'visible' : 'hidden';
     });
     if (sheet) {
-      var so = Math.min(seg(p, 0.75, 0.80), 1 - seg(p, 0.88, 0.91));
-      sheet.style.opacity = so;
-      sheet.style.transform = 'translate(-50%,-50%) scale(' + (0.94 + 0.06 * so) + ')';
-      sheet.style.visibility = so > 0.01 ? 'visible' : 'hidden';
+      var so = Math.round(Math.min(seg(p, 0.75, 0.80), 1 - seg(p, 0.88, 0.91)) * 1000) / 1000;
+      if (sheet._o !== so) {
+        sheet._o = so;
+        sheet.style.opacity = so;
+        sheet.style.transform = 'translate(-50%,-50%) scale(' + (0.94 + 0.06 * so) + ')';
+        sheet.style.visibility = so > 0.01 ? 'visible' : 'hidden';
+      }
       sheet.classList.toggle('stamped', p > 0.82);
     }
-    if (!reduce) requestAnimationFrame(draw);
+    if (!reduce && visible && !document.hidden) requestAnimationFrame(draw);
+    else running = false;
+  }
+
+  function start() {
+    if (reduce || running || !visible || document.hidden || !N) return; // !N: not measured yet
+    running = true;
+    requestAnimationFrame(draw);
   }
 
   function onScroll() {
@@ -179,15 +193,28 @@
     target = clamp(-r.top / total);
   }
 
-  layout();
   window.addEventListener('resize', layout);
   if (reduce) {
     story.classList.add('static');
-    p = target = 0.95;
-    draw(performance.now());
+    requestAnimationFrame(function () {
+      layout();
+      p = target = 0.95;
+      draw(performance.now());
+    });
     return;
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll(); p = target;
-  requestAnimationFrame(draw);
+  document.addEventListener('visibilitychange', start);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      start();
+    }).observe(story);
+  }
+  // first measurement runs in the next frame, so it reuses the browser's own layout pass
+  requestAnimationFrame(function () {
+    layout();
+    onScroll(); p = target;
+    start();
+  });
 })();
