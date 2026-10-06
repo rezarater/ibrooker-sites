@@ -1,0 +1,25 @@
+<meta charset="utf-8">
+<html lang="en"><link rel=stylesheet href=base.css><style>
+body{width:1128px;height:191px;position:relative;overflow:hidden;background:radial-gradient(120% 160% at 18% 50%,#0E1733 0%,#060A17 60%)}
+svg{position:absolute;left:0;top:0}
+.t{position:absolute;right:56px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right}
+.l1{font-weight:700;font-size:27px;letter-spacing:.2px;font-stretch:88%}
+.l1 i{font-style:normal;color:#E3B65C;padding:0 10px}
+.l2{margin-top:9px;font-size:16px;letter-spacing:2.4px;text-transform:uppercase;color:#9AA6C2}
+.rule{width:64px;border-top:2px solid #E3B65C;margin:0 0 14px}
+</style>
+<svg width="1128" height="191" id=s></svg>
+<div class=t><div class=rule></div><div class=l1>Market entry<i>·</i>Representation<i>·</i>Verified industrial trade</div><div class=l2>West Asia &nbsp;·&nbsp; Caucasus &nbsp;·&nbsp; Central Asia</div></div>
+<script>
+// deterministic constellation: many faint points, a few gold ones joined into one line (noise -> one verified connection)
+let seed=7;function r(){seed=(seed*16807)%2147483647;return seed/2147483647}
+const s=document.getElementById('s');let h='';
+for(let i=0;i<260;i++){const x=r()*400,y=r()*191,a=(.12+r()*.35).toFixed(2);h+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.6+r()*1.4).toFixed(1)}" fill="rgba(200,215,255,${a})"/>`}
+const P=[[150,58],[214,124],[282,84],[318,110]];
+h+=`<path d="M${P[0]} Q 200 20 ${P[2]}" stroke="rgba(227,182,92,.45)" stroke-width="1" fill="none"/>`;
+h+=`<path d="M${P[1]} Q 270 162 ${P[3]}" stroke="rgba(227,182,92,.45)" stroke-width="1" fill="none"/>`;
+h+=`<path d="M${P[2]} L ${P[3]} L 372 100" stroke="#E3B65C" stroke-width="1.6" fill="none"/>`;
+P.forEach(p=>h+=`<circle cx="${p[0]}" cy="${p[1]}" r="7" fill="none" stroke="rgba(227,182,92,.8)" stroke-width="1.1"/><circle cx="${p[0]}" cy="${p[1]}" r="2.2" fill="#FFECC4"/>`);
+s.innerHTML=h;
+</script>
+</html>
