@@ -1,0 +1,5 @@
+@font-face{font-family:A;src:url(archivo.woff2);font-weight:300 800;font-stretch:72% 100%}
+@font-face{font-family:V;src:url(vazirmatn.woff2);font-weight:300 800}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:#060A17;color:#E6EAF5;font-family:A,sans-serif}
+.gold{color:#E3B65C}.muted{color:#9AA6C2}
