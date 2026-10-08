@@ -10,3 +10,4 @@ Sources are HTML rendered with headless Chromium (`src/r.py`); fonts are the sit
 | 2026-10-04/M8-two-doors-one-engine-1200.png | LinkedIn post / deck (1:1) | Draft |
 | 2026-10-06/M4-linkedin-company-banner-1128x191@2x.png | LinkedIn company page cover (upload as is; LinkedIn scales it to 1128x191). Text sits right so the page logo, which overlaps the lower-left, does not cover it | Draft — needs Sina OK |
 | 2026-10-06/M16-fa-telegram-pinned-intro-1280x720.png | Telegram channel: image for the first pinned "about this channel" post (Telegram channels have no cover image) | Draft — needs Sina OK |
+| 2026-10-08/M22-corridor-brief-cover-2026-10-05-1200x627.png + M22-fa-… | Cover image for the weekly Corridor Brief post (LinkedIn P16 / Telegram P16-FA, 1.91:1). Reusable layout: change the week and the three numbers in src/m22*.html | Draft — needs Sina OK |
