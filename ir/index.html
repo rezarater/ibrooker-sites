@@ -264,7 +264,7 @@
 <script src="assets/story.js?v=4" defer></script>
 <script>
   var q=new URLSearchParams(location.search);
-  function show(id){var n=document.getElementById(id);n.hidden=false;n.scrollIntoView();n.focus({preventScroll:true})}
+  function show(id){var n=document.getElementById(id);n.hidden=false;history.replaceState(null,'',location.pathname);setTimeout(function(){n.scrollIntoView();n.focus({preventScroll:true})},60)}
   addEventListener('load',function(){if(q.get('sent')==='1')show('sent');if(q.get('sent')==='0')show('failed')});
 </script>
 </body>
