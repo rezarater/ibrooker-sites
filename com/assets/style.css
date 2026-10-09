@@ -155,3 +155,12 @@ section[id],.notice{scroll-margin-top:84px}
 footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:24px;padding-bottom:30px}
 footer a{color:#C3CBE0}
+
+/* inner pages */
+.page-hero{padding:150px 0 90px}
+.page-hero h1{font-family:var(--display);font-weight:800;font-stretch:76%;font-size:clamp(38px,5.4vw,68px);line-height:1.02;margin:0 0 22px;letter-spacing:-.4px;max-width:16em}
+.page-hero .lede{max-width:40em;color:#C3CBE0;font-size:19px;margin:0 0 32px}
+.crumbs{font-size:14px;color:var(--muted);margin:0 0 26px}
+.crumbs a{color:var(--muted)}
+.sector .more{margin-top:12px;font-size:15px}
+@media (max-width:760px){.page-hero{padding:120px 0 64px}.page-hero .lede{font-size:17px}}
