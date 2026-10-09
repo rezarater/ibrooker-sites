@@ -139,9 +139,15 @@ html[lang="fa"] .steps li::before{content:counter(s,persian)}
 .form .full{grid-column:1/-1}
 @media (max-width:640px){.form{grid-template-columns:1fr}}
 .form label{display:block;font-size:14px;margin-bottom:6px;color:var(--muted)}
-.form input,.form select,.form textarea{width:100%;font:inherit;font-size:16px;padding:13px 15px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);border-radius:8px}
+.form input,.form select,.form textarea{width:100%;font:inherit;font-size:16px;padding:13px 15px;border:1px solid #67738F;background:rgba(255,255,255,.04);color:var(--text);border-radius:8px}
 .form select option{background:var(--space-2)}
 .form textarea{min-height:140px;resize:vertical}
+.form .req{color:var(--gold-2);margin-inline-start:3px}
+.form-hint{grid-column:1/-1;margin:0;font-size:14px;color:var(--muted)}
+.form input:user-invalid,.form textarea:user-invalid{border-color:#FF8A80}
+section[id],.notice{scroll-margin-top:84px}
+.form input,.form select,.form textarea,.form button{scroll-margin-top:110px}
+.notice:focus{outline:2px solid var(--gold);outline-offset:3px}
 .hp{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .notice{max-width:780px;padding:14px 18px;margin:0 0 24px;border-inline-start:3px solid var(--gold);background:rgba(255,255,255,.05)}
 .direct{margin-top:28px;font-size:15px;color:var(--muted)}

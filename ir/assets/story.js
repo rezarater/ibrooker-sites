@@ -20,6 +20,10 @@
   var A = 2, B = 11; // the two hubs that get connected
 
   var W, H, DPR, nodes = [], parts = [], N, p = 0, target = 0, t0 = performance.now();
+  var visible = true, running = false; // animate only while the story is on screen and the tab is visible
+  // Lighter on phones and low-power devices: fewer background particles and at most 30 frames per second.
+  var lowPower = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+  var frameGap = 0, last = 0;
 
   function rnd(a, b) { return a + Math.random() * (b - a); }
   function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
@@ -27,8 +31,8 @@
   function seg(p, a, b) { return ease((p - a) / (b - a)); }
 
   function layout() {
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
     W = canvas.clientWidth; H = canvas.clientHeight;
+    DPR = Math.min(window.devicePixelRatio || 1, W < 760 ? 1.5 : 2); // phones: 1.5x canvas is visually the same and ~44% fewer pixels
     canvas.width = W * DPR; canvas.height = H * DPR;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     var mobile = W < 760;
@@ -41,14 +45,17 @@
     nodes = hubs.map(function (h) {
       return { x: cx + (h[0] - (lon0 + lon1) / 2) * s, y: cy - (h[1] - (lat0 + lat1) / 2) * s * 1.15 };
     });
-    var want = mobile ? 650 : 1800;
-    if (parts.length !== want) build(want);
+    // survivors (the dots that gather on the hubs) stay the same; only the background noise is thinned
+    var want = mobile ? 450 : lowPower ? 1100 : 1800;
+    var keep = mobile ? 72 : 198;
+    frameGap = (mobile || lowPower) ? 1000 / 30 - 2 : 0;
+    if (parts.length !== want) build(want, keep);
   }
 
-  function build(n) {
+  function build(n, keep) {
     N = n; parts = [];
     for (var i = 0; i < n; i++) {
-      var survivor = Math.random() < 0.11;
+      var survivor = Math.random() < keep / n;
       parts.push({
         x: rnd(0, 1), y: rnd(0, 1), vx: rnd(-1, 1), vy: rnd(-1, 1),
         r: rnd(0.6, 2.3), ph: rnd(0, 6.28), sp: rnd(0.2, 1),
@@ -66,8 +73,11 @@
   }
 
   function draw(now) {
+    if (frameGap && last && now - last < frameGap && !reduce) { schedule(); return; }
+    var dt = last ? Math.min(now - last, 100) : 16.7;
+    last = now;
     var time = (now - t0) / 1000;
-    p += (target - p) * 0.12;
+    p += (target - p) * (1 - Math.pow(0.88, dt / 16.7)); // same easing speed at 30, 60 or 120 fps
     ctx.clearRect(0, 0, W, H);
 
     var kFilter = seg(p, 0.22, 0.34);
@@ -80,50 +90,64 @@
     // constellation lines
     if (kGather > 0.05) {
       ctx.lineWidth = 0.6;
+      ctx.strokeStyle = 'rgba(140,170,255,' + (0.16 * kGather * (1 - kFocus * 0.7)) + ')';
+      ctx.beginPath(); // all lines share one style, so they are stroked as one path
       for (var i = 0; i < nodes.length; i++) for (var j = i + 1; j < nodes.length; j++) {
         var dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, d = Math.sqrt(dx * dx + dy * dy);
-        if (d < W * 0.13) {
-          ctx.strokeStyle = 'rgba(140,170,255,' + (0.16 * kGather * (1 - kFocus * 0.7)) + ')';
-          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
-        }
+        if (d < W * 0.13) { ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); }
       }
+      ctx.stroke();
     }
 
-    // particles
+    // particles: colour is set only when it changes and opacity goes through globalAlpha (a number),
+    // so the browser does not parse a new rgba() string for every dot on every frame
+    var curCol = '';
     for (var k = 0; k < N; k++) {
       var q = parts[k];
       var dxp = (q.x * W + Math.sin(time * 0.25 * q.sp + q.ph) * 40 + q.vx * time * 6) % W;
       var dyp = (q.y * H + Math.cos(time * 0.2 * q.sp + q.ph) * 30 + q.vy * time * 4) % H;
       if (dxp < 0) dxp += W; if (dyp < 0) dyp += H;
-      var x = dxp, y = dyp, a = 0.5 + 0.35 * Math.sin(time * 1.6 * q.sp + q.ph), col = '200,215,255';
+      var x = dxp, y = dyp, a = 0.5 + 0.35 * Math.sin(time * 1.6 * q.sp + q.ph), col = 'rgb(200,215,255)';
       if (!q.surv) {
         a *= (1 - kFilter);
         y += kFilter * H * 0.35 * q.fall;
-        if (kFilter > 0.05) col = '214,120,96';
+        if (kFilter > 0.05) col = 'rgb(214,120,96)';
         if (a < 0.01) continue;
       } else {
         var n = nodes[q.node];
         x = dxp + (n.x + q.jx - dxp) * kGather;
         y = dyp + (n.y + q.jy - dyp) * kGather;
         a = Math.max(a, 0.55 + kFilter * 0.3);
-        col = kGather > 0.5 ? '255,214,140' : '220,232,255';
+        col = kGather > 0.5 ? 'rgb(255,214,140)' : 'rgb(220,232,255)';
         a *= 1 - kFocus * 0.75 * ((q.node === A || q.node === B) ? 0 : 1);
       }
-      ctx.fillStyle = 'rgba(' + col + ',' + a + ')';
+      if (col !== curCol) { ctx.fillStyle = col; curCol = col; }
+      ctx.globalAlpha = a < 0 ? 0 : a > 1 ? 1 : a;
       ctx.beginPath(); ctx.arc(x, y, q.r, 0, 6.283); ctx.fill();
     }
+    ctx.globalAlpha = 1;
 
     // verification rings
     if (kRings > 0) {
-      for (var m = 0; m < nodes.length; m++) {
-        var focusDim = (m === A || m === B) ? 1 : 1 - kFocus * 0.8;
-        var rr = (6 + 10 * kRings) * (W < 760 ? 0.55 : 1);
+      // two groups: the connected pair (A, B) at full strength, the other hubs dimmed in the focus step
+      var rr = (6 + 10 * kRings) * (W < 760 ? 0.55 : 1);
+      ctx.lineWidth = 1.2;
+      [1, 1 - kFocus * 0.8].forEach(function (focusDim, grp) {
         ctx.strokeStyle = 'rgba(227,182,92,' + (0.75 * kRings * focusDim) + ')';
-        ctx.lineWidth = 1.2;
-        ctx.beginPath(); ctx.arc(nodes[m].x, nodes[m].y, rr, 0, 6.283 * kRings); ctx.stroke();
+        ctx.beginPath();
+        for (var m = 0; m < nodes.length; m++) {
+          if ((m === A || m === B) !== (grp === 0)) continue;
+          ctx.moveTo(nodes[m].x + rr, nodes[m].y); ctx.arc(nodes[m].x, nodes[m].y, rr, 0, 6.283 * kRings);
+        }
+        ctx.stroke();
         ctx.fillStyle = 'rgba(255,236,196,' + (0.9 * kRings * focusDim) + ')';
-        ctx.beginPath(); ctx.arc(nodes[m].x, nodes[m].y, 2.2, 0, 6.283); ctx.fill();
-      }
+        ctx.beginPath();
+        for (var m2 = 0; m2 < nodes.length; m2++) {
+          if ((m2 === A || m2 === B) !== (grp === 0)) continue;
+          ctx.moveTo(nodes[m2].x + 2.2, nodes[m2].y); ctx.arc(nodes[m2].x, nodes[m2].y, 2.2, 0, 6.283);
+        }
+        ctx.fill();
+      });
     }
 
     // the connection arc
@@ -154,23 +178,40 @@
       }
     }
 
-    // captions
+    // captions (styles are written only when the value changes, to avoid needless style recalculation)
     caps.forEach(function (el) {
       var a0 = +el.dataset.from, a1 = +el.dataset.to, fade = 0.035;
       var o = Math.min(a0 <= 0 ? 1 : clamp((p - a0) / fade), clamp((a1 - p) / fade));
       if (a1 >= 1) o = clamp((p - a0) / fade);
+      o = Math.round(o * 1000) / 1000;
+      if (el._o === o) return;
+      el._o = o;
       el.style.opacity = o;
       el.style.transform = 'translateY(' + ((1 - o) * 14) + 'px)';
       el.style.visibility = o > 0.01 ? 'visible' : 'hidden';
     });
     if (sheet) {
-      var so = Math.min(seg(p, 0.75, 0.80), 1 - seg(p, 0.88, 0.91));
-      sheet.style.opacity = so;
-      sheet.style.transform = 'translate(-50%,-50%) scale(' + (0.94 + 0.06 * so) + ')';
-      sheet.style.visibility = so > 0.01 ? 'visible' : 'hidden';
+      var so = Math.round(Math.min(seg(p, 0.75, 0.80), 1 - seg(p, 0.88, 0.91)) * 1000) / 1000;
+      if (sheet._o !== so) {
+        sheet._o = so;
+        sheet.style.opacity = so;
+        sheet.style.transform = 'translate(-50%,-50%) scale(' + (0.94 + 0.06 * so) + ')';
+        sheet.style.visibility = so > 0.01 ? 'visible' : 'hidden';
+      }
       sheet.classList.toggle('stamped', p > 0.82);
     }
-    if (!reduce) requestAnimationFrame(draw);
+    schedule();
+  }
+
+  function schedule() {
+    if (!reduce && visible && !document.hidden) requestAnimationFrame(draw);
+    else { running = false; last = 0; }
+  }
+
+  function start() {
+    if (reduce || running || !visible || document.hidden || !N) return; // !N: not measured yet
+    running = true;
+    requestAnimationFrame(draw);
   }
 
   function onScroll() {
@@ -179,15 +220,28 @@
     target = clamp(-r.top / total);
   }
 
-  layout();
   window.addEventListener('resize', layout);
   if (reduce) {
     story.classList.add('static');
-    p = target = 0.95;
-    draw(performance.now());
+    requestAnimationFrame(function () {
+      layout();
+      p = target = 0.95;
+      draw(performance.now());
+    });
     return;
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll(); p = target;
-  requestAnimationFrame(draw);
+  document.addEventListener('visibilitychange', start);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      start();
+    }).observe(story);
+  }
+  // first measurement runs in the next frame, so it reuses the browser's own layout pass
+  requestAnimationFrame(function () {
+    layout();
+    onScroll(); p = target;
+    start();
+  });
 })();

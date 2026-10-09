@@ -16,6 +16,7 @@
 <meta property="og:title" content="iBrooker | From signal to signed">
 <meta property="og:description" content="Commercial mandate firm for market entry, representation and verified industrial trade across West Asia, the Caucasus and Central Asia.">
 <meta property="og:image" content="https://ibrooker.com/assets/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="iBrooker: From signal to signed. Market entry, representation and verified industrial trade across West Asia, the Caucasus and Central Asia.">
@@ -24,6 +25,7 @@
 <meta name="twitter:title" content="iBrooker | From signal to signed">
 <meta name="twitter:description" content="Market entry, representation and verified industrial trade across West Asia, the Caucasus and Central Asia.">
 <meta name="twitter:image" content="https://ibrooker.com/assets/og.jpg">
+<meta name="twitter:image:alt" content="iBrooker: From signal to signed. Market entry, representation and verified industrial trade across West Asia, the Caucasus and Central Asia.">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" href="/assets/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -277,15 +279,16 @@
     <p class="kicker">Contact</p>
     <h2 class="title">Start with a diagnostic.</h2>
     <p class="intro">Tell us what you sell and where you want to sell it. We reply within two working days with a first view and a proposal.</p>
-    <div class="notice" id="sent" hidden>Thank you. Your message reached us and we will reply within two working days.</div>
-    <div class="notice" id="failed" hidden>Your message was not sent. Please write to <a href="mailto:info@ibrooker.com">info@ibrooker.com</a>.</div>
-    <form class="form" action="send.php" method="post">
+    <div class="notice" id="sent" role="status" tabindex="-1" hidden>Thank you. Your message reached us and we will reply within two working days.</div>
+    <div class="notice" id="failed" role="alert" tabindex="-1" hidden>Your message was not sent. Please write to <a href="mailto:info@ibrooker.com">info@ibrooker.com</a>.</div>
+    <form class="form" action="send.php" method="post" aria-describedby="form-hint">
+      <p class="form-hint" id="form-hint">Fields marked * are required.</p>
       <input type="hidden" name="lang" value="en">
       <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-      <div><label for="name">Name</label><input id="name" name="name" required autocomplete="name"></div>
-      <div><label for="company">Company</label><input id="company" name="company" required autocomplete="organization"></div>
-      <div><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-      <div><label for="country">Country</label><input id="country" name="country" autocomplete="country-name"></div>
+      <div><label for="name">Name<span class="req" aria-hidden="true">*</span></label><input id="name" name="name" maxlength="120" required autocomplete="name"></div>
+      <div><label for="company">Company<span class="req" aria-hidden="true">*</span></label><input id="company" name="company" maxlength="160" required autocomplete="organization"></div>
+      <div><label for="email">Email<span class="req" aria-hidden="true">*</span></label><input id="email" name="email" type="email" maxlength="160" spellcheck="false" autocapitalize="off" required autocomplete="email"></div>
+      <div><label for="country">Country</label><input id="country" name="country" maxlength="80" autocomplete="country-name"></div>
       <div class="full"><label for="goal">What do you need?</label>
         <select id="goal" name="goal">
           <option>Enter markets in West Asia</option>
@@ -293,7 +296,7 @@
           <option>Source products from the region</option>
           <option>Something else</option>
         </select></div>
-      <div class="full"><label for="message">Your products and target market</label><textarea id="message" name="message" required></textarea></div>
+      <div class="full"><label for="message">Your products and target market<span class="req" aria-hidden="true">*</span></label><textarea id="message" name="message" maxlength="5000" required></textarea></div>
       <div class="full"><button class="btn primary" type="submit">Send message</button></div>
     </form>
     <p class="direct">Or write directly to <a href="mailto:info@ibrooker.com">info@ibrooker.com</a></p>
@@ -307,11 +310,11 @@
     <span><a href="mailto:info@ibrooker.com">info@ibrooker.com</a> · <a href="https://ir.ibrooker.com/" lang="fa">فارسی</a></span>
   </div>
 </footer>
-<script src="assets/story.js?v=2" defer></script>
+<script src="assets/story.js?v=4" defer></script>
 <script>
   var q=new URLSearchParams(location.search);
-  if(q.get('sent')==='1'){document.getElementById('sent').hidden=false;location.hash='contact'}
-  if(q.get('sent')==='0'){document.getElementById('failed').hidden=false;location.hash='contact'}
+  function show(id){var n=document.getElementById(id);n.hidden=false;history.replaceState(null,'',location.pathname);setTimeout(function(){n.scrollIntoView();n.focus({preventScroll:true})},60)}
+  addEventListener('load',function(){if(q.get('sent')==='1')show('sent');if(q.get('sent')==='0')show('failed')});
 </script>
 </body>
 </html>
