@@ -36,7 +36,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .caps{position:absolute;inset:0;pointer-events:none}
-.cap{position:absolute;inset-inline-start:max(24px,calc((100vw - var(--max))/2 + 24px));bottom:16vh;max-width:min(520px,86vw);opacity:0;visibility:hidden;will-change:opacity,transform}
+.cap{position:absolute;inset-inline-start:max(24px,calc((100vw - var(--max))/2 + 24px));bottom:16vh;max-width:min(520px,86vw);will-change:opacity,transform}
+/* captions start transparent only when scripts run; they stay in the accessibility tree so screen readers get the whole story */
+.js .cap{opacity:0}
+.cap.off .actions{pointer-events:none}
 .cap.first{bottom:auto;top:30vh;max-width:min(640px,88vw)}
 .cap h1,.cap h2{font-family:var(--display);font-weight:800;font-stretch:72%;line-height:.98;margin:0 0 16px;letter-spacing:-.4px}
 .cap h1{font-size:clamp(52px,8vw,112px)}
@@ -66,14 +69,17 @@ html[dir="rtl"] .story-sheet .no{text-align:right}
 .seal::before{content:"";position:absolute;inset:5px;border:1px solid rgba(227,182,92,.6);border-radius:50%}
 .stamped .seal{opacity:1;transform:rotate(-10deg) scale(1)}
 
-/* reduced motion: show the story as a list */
-.story.static{height:auto}
-.story.static .stage{position:relative;height:auto;min-height:100vh;padding:110px 0 60px}
+/* reduced motion, or no JavaScript: show the story as a list */
+.story.static,html:not(.js) .story{height:auto}
+.story.static .stage,html:not(.js) .stage{position:relative;height:auto;min-height:100vh;padding:110px 0 60px}
 .story.static canvas{opacity:.55}
-.story.static .caps{position:relative;display:grid;gap:40px;max-width:var(--max);margin:0 auto;padding:0 24px}
-.story.static .cap{position:relative;inset:auto;opacity:1!important;visibility:visible!important;transform:none!important}
-.story.static .story-sheet{position:relative;left:auto;top:auto;transform:none!important;opacity:1!important;visibility:visible!important;margin:40px auto}
-.story.static .seal{opacity:1;transform:rotate(-10deg)}
+html:not(.js) .stage canvas{display:none}
+.story.static .caps,html:not(.js) .caps{position:relative;display:grid;gap:40px;max-width:var(--max);margin:0 auto;padding:0 24px}
+.story.static .cap,html:not(.js) .cap{position:relative;inset:auto;opacity:1!important;visibility:visible!important;transform:none!important}
+.story.static .story-sheet,html:not(.js) .story-sheet{position:relative;left:auto;top:auto;transform:none!important;opacity:1!important;visibility:visible!important;margin:40px auto}
+.story.static .seal,html:not(.js) .seal{opacity:1;transform:rotate(-10deg)}
+html:not(.js) .hint{display:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hint::after{animation:none}.seal{transition:none}}
 
 /* buttons */
 .actions{display:flex;flex-wrap:wrap;gap:12px}
