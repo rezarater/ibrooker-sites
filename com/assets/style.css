@@ -29,7 +29,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .nav a{color:var(--muted);text-decoration:none}
 .nav a:hover{color:var(--text)}
 .nav .lang{color:var(--text);border:1px solid var(--line);padding:5px 13px;border-radius:999px}
-@media (max-width:760px){.nav a:not(.lang){display:none}}
+@media (max-width:760px){.nav{gap:14px}.nav a:not(.lang):not([href="#contact"]){display:none}.nav a[href="#contact"]{color:var(--text);padding:10px 2px}}
+@media (max-width:340px){.mark{font-size:23px}.nav{gap:10px}}
 
 /* story stage */
 .story{position:relative;height:720vh}
