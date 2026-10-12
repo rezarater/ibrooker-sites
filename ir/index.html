@@ -37,6 +37,14 @@
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "Organization",
+      "@id": "https://ibrooker.com/#org",
+      "name": "iBrooker",
+      "alternateName": "آی‌بروکر",
+      "url": "https://ibrooker.com/",
+      "logo": {"@type": "ImageObject", "url": "https://ibrooker.com/apple-touch-icon.png", "width": 180, "height": 180}
+    },
+    {
       "@type": "ProfessionalService",
       "@id": "https://ir.ibrooker.com/#service",
       "name": "آی‌بروکر",
@@ -44,8 +52,16 @@
       "url": "https://ir.ibrooker.com/",
       "email": "export@ibrooker.com",
       "image": "https://ir.ibrooker.com/assets/og.jpg",
+      "logo": "https://ir.ibrooker.com/apple-touch-icon.png",
       "description": "میز صادرات و کارگزاری تجاری برای تولیدکنندگان فولاد، فلزات، مواد معدنی و تجهیزات صنعتی.",
       "parentOrganization": {"@id": "https://ibrooker.com/#org"},
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "export@ibrooker.com",
+        "url": "https://ir.ibrooker.com/#contact",
+        "availableLanguage": ["Persian", "English"]
+      },
       "serviceType": ["میز صادرات برون‌سپاری‌شده", "کارگزاری تجاری", "یافتن و راستی‌آزمایی خریدار خارجی", "اجرای معامله، حمل و ترخیص"],
       "knowsAbout": ["فولاد و فلزات", "مواد معدنی", "تجهیزات و قطعات معدنی", "اتوماسیون صنعتی و سیستم‌های ایمنی", "حمل‌ونقل بین‌المللی", "ترخیص کالا"],
       "areaServed": [
