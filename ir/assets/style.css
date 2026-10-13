@@ -20,6 +20,10 @@ a{color:var(--gold-2)}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
 
+.skip{position:absolute;inset-inline-start:12px;top:-80px;z-index:40;padding:10px 16px;border-radius:6px;background:var(--gold);color:var(--space);font-weight:600;text-decoration:none;transition:top .15s}
+.skip:focus{top:12px}
+main:focus{outline:none}
+
 /* header */
 .top{position:fixed;inset:0 0 auto 0;z-index:20;background:linear-gradient(to bottom,rgba(6,10,23,.85),rgba(6,10,23,0));backdrop-filter:blur(2px)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
