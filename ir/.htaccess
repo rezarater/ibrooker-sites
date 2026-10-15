@@ -1,5 +1,11 @@
 <IfModule mod_headers.c>
-<FilesMatch "\.(html|css|js)$">
+# HTML: always re-check, so content changes show up at once.
+<FilesMatch "\.html$">
 Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+# CSS/JS: referenced as file.ext?v=N. Cached 7 days (same as fonts/images).
+# RULE: bump ?v= in index.html whenever style.css or story.js changes.
+<FilesMatch "\.(css|js)$">
+Header set Cache-Control "public, max-age=604800"
 </FilesMatch>
 </IfModule>
