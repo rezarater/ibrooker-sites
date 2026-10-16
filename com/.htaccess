@@ -9,3 +9,16 @@ Header set Cache-Control "no-cache, must-revalidate"
 Header set Cache-Control "public, max-age=604800"
 </FilesMatch>
 </IfModule>
+
+# Canonical host: send http:// and www. to https://ibrooker.com/ with one 301,
+# so search engines see a single version of each page.
+# Host-scoped on purpose (safe if one docroot sits inside the other).
+# /.well-known/ is left alone so SSL certificate renewal is never affected.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteCond %{HTTP_HOST} ^(www\.)?ibrooker\.com$ [NC]
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://ibrooker.com%{REQUEST_URI} [R=301,L]
+</IfModule>

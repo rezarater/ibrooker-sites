@@ -13,3 +13,8 @@ HTML is served `no-cache` so edits are visible at once. CSS and JS are cached fo
 like fonts and images. Whenever `assets/style.css` or `assets/story.js` changes,
 bump the `?v=` number in that site's `index.html` (when merging a branch, use a number
 higher than the one on main), or returning visitors keep the old file for up to a week.
+
+## Canonical host (.htaccess)
+Both sites answer only on `https://` without `www.`. Requests to `http://` or `www.` get one
+301 to the same path on the canonical host (rules are host-scoped; `/.well-known/` is exempt
+so SSL renewal keeps working). Keep canonical, hreflang, sitemap and og:url on these hosts.
