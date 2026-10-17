@@ -18,3 +18,8 @@ higher than the one on main), or returning visitors keep the old file for up to 
 Both sites answer only on `https://` without `www.`. Requests to `http://` or `www.` get one
 301 to the same path on the canonical host (rules are host-scoped; `/.well-known/` is exempt
 so SSL renewal keeps working). Keep canonical, hreflang, sitemap and og:url on these hosts.
+
+## Error page (.htaccess)
+`404.html` in each site is served for unknown URLs via `ErrorDocument 404 /404.html`.
+The status stays 404 and the page carries `noindex`; it uses absolute paths (`/assets/...`)
+so it renders correctly at any depth. Keep it out of sitemap.xml.

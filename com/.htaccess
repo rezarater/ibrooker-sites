@@ -1,3 +1,6 @@
+# Custom error page: unknown URLs get a branded 404 (status stays 404, page is noindex).
+ErrorDocument 404 /404.html
+
 <IfModule mod_headers.c>
 # HTML: always re-check, so content changes show up at once.
 <FilesMatch "\.html$">
