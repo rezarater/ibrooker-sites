@@ -23,3 +23,11 @@ so SSL renewal keeps working). Keep canonical, hreflang, sitemap and og:url on t
 `404.html` in each site is served for unknown URLs via `ErrorDocument 404 /404.html`.
 The status stays 404 and the page carries `noindex`; it uses absolute paths (`/assets/...`)
 so it renders correctly at any depth. Keep it out of sitemap.xml.
+
+## Security headers (.htaccess)
+Both sites send `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`,
+`X-Frame-Options: SAMEORIGIN`, `Content-Security-Policy: frame-ancestors 'self'` and a
+`Permissions-Policy` that switches off camera, microphone, geolocation, payment and USB.
+The CSP is limited to `frame-ancestors` on purpose (inline JSON-LD and inline script are in use).
+If a third-party embed or script is ever added, check it still works with these headers.
+HSTS is not set yet; add it with a short max-age first, then raise it.

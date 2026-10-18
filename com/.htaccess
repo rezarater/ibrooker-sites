@@ -2,6 +2,17 @@
 ErrorDocument 404 /404.html
 
 <IfModule mod_headers.c>
+# Security headers (no effect on how the page looks or loads):
+# - nosniff: browsers trust the declared file type (CSS/JS/fonts are served with correct types).
+# - Referrer-Policy: other sites see only "ibrooker.com", never full URLs with ?query strings.
+# - X-Frame-Options + CSP frame-ancestors: the site cannot be framed by other sites (anti-clickjacking).
+# - Permissions-Policy: camera, microphone, geolocation, payment and USB are switched off; the site uses none.
+# CSP is limited to frame-ancestors on purpose: the page uses inline JSON-LD and a small inline script.
+Header set X-Content-Type-Options "nosniff"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set Content-Security-Policy "frame-ancestors 'self'"
+Header set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
 # HTML: always re-check, so content changes show up at once.
 <FilesMatch "\.html$">
 Header set Cache-Control "no-cache, must-revalidate"
