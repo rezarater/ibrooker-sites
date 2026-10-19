@@ -188,7 +188,7 @@
       el._o = o;
       el.style.opacity = o;
       el.style.transform = 'translateY(' + ((1 - o) * 14) + 'px)';
-      el.style.visibility = o > 0.01 ? 'visible' : 'hidden';
+      el.classList.toggle('off', o <= 0.01); // transparent, not hidden: screen readers still read every caption
     });
     if (sheet) {
       var so = Math.round(Math.min(seg(p, 0.75, 0.80), 1 - seg(p, 0.88, 0.91)) * 1000) / 1000;
@@ -231,6 +231,21 @@
     return;
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+  // Keyboard users: when focus lands on a link inside a caption that is not on screen
+  // (e.g. tabbing to "Start a market-entry sprint"), jump to that step so the focused link is visible.
+  story.addEventListener('focusin', function (e) {
+    var cap = e.target.closest ? e.target.closest('.cap') : null;
+    if (!cap || cap._o > 0.99) return;
+    var a0 = +cap.dataset.from, a1 = +cap.dataset.to;
+    var mid = a1 >= 1 ? 0.97 : (a0 + a1) / 2;
+    var total = story.offsetHeight - window.innerHeight;
+    var root = document.documentElement;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, story.getBoundingClientRect().top + window.pageYOffset + mid * total);
+    root.style.scrollBehavior = '';
+    onScroll(); p = target;
+    start(); // the observer restarts the loop too if the story was off screen
+  });
   document.addEventListener('visibilitychange', start);
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {

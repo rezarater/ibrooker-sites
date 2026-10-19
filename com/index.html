@@ -30,7 +30,8 @@
 <link rel="icon" href="/assets/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="assets/archivo.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=4">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="assets/style.css?v=8">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -42,11 +43,13 @@
       "url": "https://ibrooker.com/",
       "email": "info@ibrooker.com",
       "image": "https://ibrooker.com/assets/og.jpg",
+      "logo": {"@type": "ImageObject", "url": "https://ibrooker.com/apple-touch-icon.png", "width": 180, "height": 180},
       "description": "Commercial mandate firm for market entry, regional representation and verified industrial trade across West Asia, the Caucasus and Central Asia.",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "sales",
         "email": "info@ibrooker.com",
+        "url": "https://ibrooker.com/#contact",
         "availableLanguage": ["English", "Persian"]
       }
     },
@@ -57,6 +60,7 @@
       "url": "https://ibrooker.com/",
       "email": "info@ibrooker.com",
       "image": "https://ibrooker.com/assets/og.jpg",
+      "logo": "https://ibrooker.com/apple-touch-icon.png",
       "parentOrganization": {"@id": "https://ibrooker.com/#org"},
       "serviceType": ["Market entry", "Commercial representation", "Industrial sourcing", "Trade deal execution"],
       "knowsAbout": ["Steel and metals", "Steel billet", "Hot-rolled coil", "Rebar", "DRI and HBI", "Ferroalloys", "Iron ore", "Coal", "Copper concentrate", "Chrome ore", "Crushing and screening equipment", "Minerals and raw materials", "Mining equipment and spare parts", "Industrial automation and safety systems", "Logistics and trade services", "Freight forwarding", "Customs brokerage"],
@@ -76,6 +80,8 @@
         {"@type": "Country", "name": "United Arab Emirates"},
         {"@type": "Country", "name": "Oman"},
         {"@type": "Country", "name": "Qatar"},
+        {"@type": "Country", "name": "Afghanistan"},
+        {"@type": "Country", "name": "Pakistan"},
         {"@type": "Country", "name": "Türkiye"}
       ]
     },
@@ -92,6 +98,7 @@
 </script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to main content</a>
 
 <header class="top">
   <div class="wrap">
@@ -106,7 +113,7 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 <section id="story" class="story" aria-label="How iBrooker works">
   <div class="stage">
     <canvas aria-hidden="true"></canvas>
@@ -311,7 +318,7 @@
     <span><a href="mailto:info@ibrooker.com">info@ibrooker.com</a> · <a href="https://ir.ibrooker.com/" lang="fa">فارسی</a></span>
   </div>
 </footer>
-<script src="assets/story.js?v=4" defer></script>
+<script src="assets/story.js?v=5" defer></script>
 <script>
   var q=new URLSearchParams(location.search);
   function show(id){var n=document.getElementById(id);n.hidden=false;history.replaceState(null,'',location.pathname);setTimeout(function(){n.scrollIntoView();n.focus({preventScroll:true})},60)}

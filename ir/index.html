@@ -30,11 +30,20 @@
 <link rel="icon" href="/assets/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="assets/vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=3">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="assets/style.css?v=7">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ibrooker.com/#org",
+      "name": "iBrooker",
+      "alternateName": "آی‌بروکر",
+      "url": "https://ibrooker.com/",
+      "logo": {"@type": "ImageObject", "url": "https://ibrooker.com/apple-touch-icon.png", "width": 180, "height": 180}
+    },
     {
       "@type": "ProfessionalService",
       "@id": "https://ir.ibrooker.com/#service",
@@ -43,8 +52,16 @@
       "url": "https://ir.ibrooker.com/",
       "email": "export@ibrooker.com",
       "image": "https://ir.ibrooker.com/assets/og.jpg",
+      "logo": "https://ir.ibrooker.com/apple-touch-icon.png",
       "description": "میز صادرات و کارگزاری تجاری برای تولیدکنندگان فولاد، فلزات، مواد معدنی و تجهیزات صنعتی.",
       "parentOrganization": {"@id": "https://ibrooker.com/#org"},
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "export@ibrooker.com",
+        "url": "https://ir.ibrooker.com/#contact",
+        "availableLanguage": ["Persian", "English"]
+      },
       "serviceType": ["میز صادرات برون‌سپاری‌شده", "کارگزاری تجاری", "یافتن و راستی‌آزمایی خریدار خارجی", "اجرای معامله، حمل و ترخیص"],
       "knowsAbout": ["فولاد و فلزات", "مواد معدنی", "تجهیزات و قطعات معدنی", "اتوماسیون صنعتی و سیستم‌های ایمنی", "حمل‌ونقل بین‌المللی", "ترخیص کالا"],
       "areaServed": [
@@ -66,6 +83,7 @@
 </script>
 </head>
 <body>
+<a class="skip" href="#main">پرش به محتوای اصلی</a>
 
 <header class="top">
   <div class="wrap">
@@ -80,7 +98,7 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 <section id="story" class="story" aria-label="آی‌بروکر چطور کار می‌کند">
   <div class="stage">
     <canvas aria-hidden="true"></canvas>
@@ -284,7 +302,7 @@
     <span><a href="mailto:export@ibrooker.com">export@ibrooker.com</a> · <a href="https://ibrooker.com/" lang="en">English</a></span>
   </div>
 </footer>
-<script src="assets/story.js?v=4" defer></script>
+<script src="assets/story.js?v=5" defer></script>
 <script>
   var q=new URLSearchParams(location.search);
   function show(id){var n=document.getElementById(id);n.hidden=false;history.replaceState(null,'',location.pathname);setTimeout(function(){n.scrollIntoView();n.focus({preventScroll:true})},60)}
