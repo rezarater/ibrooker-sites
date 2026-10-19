@@ -1,5 +1,38 @@
+# Custom error page: unknown URLs get a branded 404 (status stays 404, page is noindex).
+ErrorDocument 404 /404.html
+
 <IfModule mod_headers.c>
-<FilesMatch "\.(html|css|js)$">
+# Security headers (no effect on how the page looks or loads):
+# - nosniff: browsers trust the declared file type (CSS/JS/fonts are served with correct types).
+# - Referrer-Policy: other sites see only "ibrooker.com", never full URLs with ?query strings.
+# - X-Frame-Options + CSP frame-ancestors: the site cannot be framed by other sites (anti-clickjacking).
+# - Permissions-Policy: camera, microphone, geolocation, payment and USB are switched off; the site uses none.
+# CSP is limited to frame-ancestors on purpose: the page uses inline JSON-LD and a small inline script.
+Header set X-Content-Type-Options "nosniff"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set Content-Security-Policy "frame-ancestors 'self'"
+Header set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+# HTML: always re-check, so content changes show up at once.
+<FilesMatch "\.html$">
 Header set Cache-Control "no-cache, must-revalidate"
 </FilesMatch>
+# CSS/JS: referenced as file.ext?v=N. Cached 7 days (same as fonts/images).
+# RULE: bump ?v= in index.html whenever style.css or story.js changes.
+<FilesMatch "\.(css|js)$">
+Header set Cache-Control "public, max-age=604800"
+</FilesMatch>
+</IfModule>
+
+# Canonical host: send http:// and www. to https://ir.ibrooker.com/ with one 301,
+# so search engines see a single version of each page.
+# Host-scoped on purpose (safe if one docroot sits inside the other).
+# /.well-known/ is left alone so SSL certificate renewal is never affected.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteCond %{HTTP_HOST} ^(www\.)?ir\.ibrooker\.com$ [NC]
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://ir.ibrooker.com%{REQUEST_URI} [R=301,L]
 </IfModule>
