@@ -9,8 +9,10 @@ with `{"host": "...", "key": "8d5ce3a11e43c4fef38ea4c43bdc5710", "keyLocation": 
 Google does not use IndexNow; it needs Search Console.
 
 ## Caching (.htaccess)
-HTML is served `no-cache` so edits are visible at once. CSS and JS are cached for 7 days,
-like fonts and images. Whenever `assets/style.css` or `assets/story.js` changes,
+HTML is served `no-cache` so edits are visible at once. CSS and JS are cached for 7 days.
+Fonts (`.woff2`) are cached 1 year as `immutable`: never edit a font in place; save a changed
+font under a new file name and update the preload link and `@font-face`. Images and icons are
+cached 30 days; replace an image under a new name (or add `?v=`) if it must change at once. Whenever `assets/style.css` or `assets/story.js` changes,
 bump the `?v=` number in that site's `index.html` (when merging a branch, use a number
 higher than the one on main), or returning visitors keep the old file for up to a week.
 

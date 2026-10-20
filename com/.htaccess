@@ -17,10 +17,20 @@ Header set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment
 <FilesMatch "\.html$">
 Header set Cache-Control "no-cache, must-revalidate"
 </FilesMatch>
-# CSS/JS: referenced as file.ext?v=N. Cached 7 days (same as fonts/images).
+# CSS/JS: referenced as file.ext?v=N. Cached 7 days.
 # RULE: bump ?v= in index.html whenever style.css or story.js changes.
 <FilesMatch "\.(css|js)$">
 Header set Cache-Control "public, max-age=604800"
+</FilesMatch>
+# Fonts: cached 1 year and marked immutable (they never change in place).
+# RULE: if a font is ever re-subset, save it under a NEW file name (e.g. archivo-2.woff2)
+# and update the preload link in index.html and the @font-face rule in style.css.
+<FilesMatch "\.woff2$">
+Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+# Images and icons (og.jpg, favicon, touch icon): cached 30 days.
+<FilesMatch "\.(jpe?g|png|ico|webp|svg)$">
+Header set Cache-Control "public, max-age=2592000"
 </FilesMatch>
 </IfModule>
 
