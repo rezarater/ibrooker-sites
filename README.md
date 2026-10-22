@@ -32,4 +32,7 @@ Both sites send `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-orig
 `Permissions-Policy` that switches off camera, microphone, geolocation, payment and USB.
 The CSP is limited to `frame-ancestors` on purpose (inline JSON-LD and inline script are in use).
 If a third-party embed or script is ever added, check it still works with these headers.
-HSTS is not set yet; add it with a short max-age first, then raise it.
+HSTS: `Strict-Transport-Security: max-age=86400` (1 day, step 1 of 3, set 2026-10-22).
+Next steps after each is verified live: 1 week (604800), then 6 months (15552000).
+No `includeSubDomains` on ibrooker.com (it would force every subdomain, incl. mail/cPanel hosts,
+onto https) and no `preload` (hard to undo). The HTTPS certificate must stay valid on both hosts.

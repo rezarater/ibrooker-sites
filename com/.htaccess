@@ -13,6 +13,10 @@ Header set Referrer-Policy "strict-origin-when-cross-origin"
 Header set X-Frame-Options "SAMEORIGIN"
 Header set Content-Security-Policy "frame-ancestors 'self'"
 Header set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+# HSTS (step 1 of 3): browsers remember to use https:// for this host for 1 day.
+# No includeSubDomains and no preload on purpose. Raise in steps once verified live:
+# 1 day -> 1 week (604800) -> 6 months (15552000). Only browsers on https:// honour it.
+Header set Strict-Transport-Security "max-age=86400"
 # HTML: always re-check, so content changes show up at once.
 <FilesMatch "\.html$">
 Header set Cache-Control "no-cache, must-revalidate"
