@@ -1,6 +1,10 @@
 # Custom error page: unknown URLs get a branded 404 (status stays 404, page is noindex).
 ErrorDocument 404 /404.html
 
+# Charset: HTML and plain-text responses (pages, robots.txt, security.txt) are declared UTF-8,
+# so Persian text never depends on browser guessing. RFC 9116 requires it for security.txt.
+AddDefaultCharset UTF-8
+
 <IfModule mod_headers.c>
 # Security headers (no effect on how the page looks or loads):
 # - nosniff: browsers trust the declared file type (CSS/JS/fonts are served with correct types).

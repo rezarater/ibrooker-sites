@@ -36,3 +36,10 @@ HSTS: `Strict-Transport-Security: max-age=86400` (1 day, step 1 of 3, set 2026-1
 Next steps after each is verified live: 1 week (604800), then 6 months (15552000).
 No `includeSubDomains` on ibrooker.com (it would force every subdomain, incl. mail/cPanel hosts,
 onto https) and no `preload` (hard to undo). The HTTPS certificate must stay valid on both hosts.
+
+## security.txt and charset (2026-10-23)
+`/.well-known/security.txt` (RFC 9116) on both sites names the address for reporting a security
+problem (EN: info@, FA: export@). **It carries an `Expires` date (2027-10-23): renew it before then**,
+or scanners will treat it as stale. The deploy copies `.well-known/` into place without deleting
+anything already there (SSL renewal files stay). `.htaccess` sets `AddDefaultCharset UTF-8`, so HTML
+and plain-text responses are declared UTF-8 (required by RFC 9116; also protects Persian text).

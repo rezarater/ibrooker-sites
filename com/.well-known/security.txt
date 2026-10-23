@@ -1,0 +1,6 @@
+# Security contact for ibrooker.com (RFC 9116).
+# To report a security problem with this website, write to the address below.
+Contact: mailto:info@ibrooker.com
+Expires: 2027-10-23T00:00:00.000Z
+Preferred-Languages: en, fa
+Canonical: https://ibrooker.com/.well-known/security.txt
